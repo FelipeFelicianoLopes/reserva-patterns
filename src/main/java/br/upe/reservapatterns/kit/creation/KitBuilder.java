@@ -37,8 +37,11 @@ public class KitBuilder {
       }
     }
 
-    entries.add(new Entry(equipment, quantity));
+    if (equipment == null || quantity <= 0 || quantity > equipment.getTotalUnits()) {
+      throw new IllegalArgumentException();
+    }
 
+    entries.add(new Entry(equipment, quantity));
     return this;
   }
 
@@ -47,7 +50,11 @@ public class KitBuilder {
       Kit kit = new Kit(name, description);
 
       for (Entry entry : entries) {
-        kit.add(entry.equipment(), entry.quantity());
+        if (entry.quantity() > entry.equipment().getTotalUnits() || entry.quantity <= 0) {
+          throw new IllegalArgumentException();
+        } else {
+          kit.add(entry.equipment(), entry.quantity());
+        }
       }
 
       return kit;
