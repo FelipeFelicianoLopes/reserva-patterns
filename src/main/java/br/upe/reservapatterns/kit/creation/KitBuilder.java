@@ -34,22 +34,26 @@ public class KitBuilder {
     for (Entry entry : entries) {
       if (entry.equipment.equals(equipment)) {
         throw new IllegalArgumentException();
-      } else {
-        entries.add(new Entry(equipment, quantity));
       }
     }
+
+    entries.add(new Entry(equipment, quantity));
 
     return this;
   }
 
   public Kit build() {
-    Kit kit = new Kit(name, description);
+    if (!entries.isEmpty()) {
+      Kit kit = new Kit(name, description);
 
-    for (Entry entry : entries) {
-      kit.add(entry.equipment, entry.quantity);
+      for (Entry entry : entries) {
+        kit.add(entry.equipment(), entry.quantity());
+      }
+
+      return kit;
+    } else {
+      throw new IllegalArgumentException();
     }
-
-    return kit;
   }
 
   private record Entry(Equipment equipment, int quantity) {}
